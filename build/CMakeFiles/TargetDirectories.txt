@@ -1,0 +1,3 @@
+/home/ismael/Documents/Work/MiniVR/build/CMakeFiles/rebuild_cache.dir
+/home/ismael/Documents/Work/MiniVR/build/CMakeFiles/edit_cache.dir
+/home/ismael/Documents/Work/MiniVR/build/CMakeFiles/MiniVR.dir
