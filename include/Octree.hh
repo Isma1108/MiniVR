@@ -2,17 +2,18 @@
 #define OCTREE_HH
 
 #include "OctreeNode.hh"
+#include "Types.hh"
 
 class Octree {
 public:
     Octree(const BoundingBox& bounds, int maxDepth);
 
-    void build(const std::vector<std::vector<std::array<double, 3>>>& triangles);
+    void build(const std::vector<Triangle>& triangles);
 
 private:
     std::unique_ptr<OctreeNode> root;
     int maxDepth;
-    const std::vector<std::vector<std::array<double, 3>>>* allTriangles;
+    const std::vector<Triangle>* allTriangles;
 
     void buildRecursive(OctreeNode* node, int depth);
     void subdivide(OctreeNode* node);
@@ -20,4 +21,3 @@ private:
 };
 
 #endif // OCTREE_HH
-

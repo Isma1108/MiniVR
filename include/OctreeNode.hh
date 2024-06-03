@@ -2,17 +2,26 @@
 #define OCTREE_NODE_HH
 
 #include "BoundingBox.hh"
-#include <vector>
-#include <array>
+#include "Types.hh"
 #include <memory>
+#include <vector>
 
-enum class NodeColor { WHITE, BLACK };
+// WHITE -> Outside the model
+// BLACK -> Inside the model
+// GREY  -> Intersecting the model
+enum class NodeColor { WHITE, BLACK, GREY };
 
 struct OctreeNode {
     BoundingBox bounds;
-    std::vector<std::vector<std::array<double, 3>>> triangles; // Llista de tringles
+    std::vector<size_t> triangleIndices;
     std::unique_ptr<OctreeNode> children[8];
     NodeColor color;
+
+    OctreeNode(const BoundingBox& b, NodeColor col)
+        : bounds(b), color(col) {}
+
+    OctreeNode(const Vector3D& min, const Vector3D& max, NodeColor col)
+        : bounds({min, max}), color(col) {}
 
     bool isLeaf() const {
         return children[0] == nullptr;
@@ -20,4 +29,3 @@ struct OctreeNode {
 };
 
 #endif // OCTREE_NODE_HH
-

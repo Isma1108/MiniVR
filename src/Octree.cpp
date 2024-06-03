@@ -1,68 +1,71 @@
 #include "Octree.hh"
 
 Octree::Octree(const BoundingBox& bounds, int maxDepth)
-    : root(std::make_unique<OctreeNode>(OctreeNode{bounds, {}, NodeColor::WHITE})), maxDepth(maxDepth), allTriangles(nullptr) {}
+    : root(std::make_unique<OctreeNode>(OctreeNode{bounds, NodeColor::GREY})), maxDepth(maxDepth), allTriangles(nullptr) {}
 
-void Octree::build(const std::vector<std::vector<std::array<double, 3>>>& triangles) {
+void Octree::build(const std::vector<Triangle>& triangles) {
     allTriangles = &triangles;
-    root->triangles = triangles;
+    root->triangleIndices.reserve(triangles.size());
+    for (size_t i = 0; i < triangles.size(); ++i) {
+        root->triangleIndices.push_back(i);
+    }
     buildRecursive(root.get(), 0);
 }
 
 void Octree::buildRecursive(OctreeNode* node, int depth) {
-    if (depth >= maxDepth || node->triangles.empty()) {
+    if (depth >= maxDepth || node->triangleIndices.empty()) {
         return;
     }
 
     subdivide(node);
 
-    std::vector<std::vector<std::array<double, 3>>> childTriangles[8];
-    for (const auto& triangle : node->triangles) {
+    //std::vector<size_t> childTriangleIndices[8];
+    for (size_t idx : node->triangleIndices) {
+        const auto& triangle = (*allTriangles)[idx];
         for (int i = 0; i < 8; ++i) {
             if (node->children[i]->bounds.intersects(triangle)) {
-                childTriangles[i].push_back(triangle);
+                node->children[i]->triangleIndices.push_back(idx);
+                //childTriangleIndices[i].push_back(idx);
             }
         }
     }
 
     for (int i = 0; i < 8; ++i) {
-        node->children[i]->triangles = childTriangles[i];
+        //node->children[i]->triangleIndices = std::move(childTriangleIndices[i]);
 
-        if (node->children[i]->triangles.empty()) {
+        if (node->children[i]->triangleIndices.empty()) {
             if (isInsideModel(node->children[i]->bounds)) {
                 node->children[i]->color = NodeColor::BLACK;
             } else {
                 node->children[i]->color = NodeColor::WHITE;
             }
+        } else {
+            buildRecursive(node->children[i].get(), depth + 1);
         }
-        else buildRecursive(node->children[i].get(), depth + 1);
     }
 
-    node->triangles.clear();
+    node->triangleIndices.clear();
 }
 
 void Octree::subdivide(OctreeNode* node) {
     auto& bounds = node->bounds;
-    std::array<double, 3> mid = {
-        (bounds.min[0] + bounds.max[0]) / 2,
-        (bounds.min[1] + bounds.max[1]) / 2,
-        (bounds.min[2] + bounds.max[2]) / 2
-    };
+    Vector3D mid = (bounds.min + bounds.max) / static_cast<Real>(2.0);
 
     for (int i = 0; i < 8; ++i) {
-        std::array<double, 3> newMin = bounds.min;
-        std::array<double, 3> newMax = mid;
+        Vector3D newMin = bounds.min;
+        Vector3D newMax = mid;
 
-        if (i & 1) newMin[0] = mid[0]; else newMax[0] = bounds.max[0];
-        if (i & 2) newMin[1] = mid[1]; else newMax[1] = bounds.max[1];
-        if (i & 4) newMin[2] = mid[2]; else newMax[2] = bounds.max[2];
+        if (i & 1) newMin.x = mid.x; else newMax.x = bounds.max.x;
+        if (i & 2) newMin.y = mid.y; else newMax.y = bounds.max.y;
+        if (i & 4) newMin.z = mid.z; else newMax.z = bounds.max.z;
 
-        node->children[i] = std::make_unique<OctreeNode>(OctreeNode{{newMin, newMax}, {}, NodeColor::WHITE});
+        node->children[i] = std::make_unique<OctreeNode>(newMin, newMax, NodeColor::GREY);
     }
 }
 
 bool Octree::isInsideModel(const BoundingBox& box) const {
-    // AQUI FALTA IMPLEMENTAR EL TEST PER SABER SI LA BOUNDING BOX ES DINS O FORA DEL MODEL
+    // Aquí falta implementar el test para saber si la caja delimitadora está dentro o fuera del modelo
     return true;
 }
+
 

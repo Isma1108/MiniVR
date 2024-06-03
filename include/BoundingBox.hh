@@ -3,12 +3,14 @@
 
 #include <array>
 #include <vector>
+#include <glm/glm.hpp>
+#include "Types.hh"
 
 struct BoundingBox {
-    std::array<double, 3> min;
-    std::array<double, 3> max;
+    Vector3D min;
+    Vector3D max;
 
-    bool intersects(const std::vector<std::array<double, 3>>& triangle) const;
+    bool intersects(const Triangle& triangle) const;
 };
 
 BoundingBox calculateGlobalBoundingBox(const std::vector<std::array<double, 3>>& vertexPositions);
