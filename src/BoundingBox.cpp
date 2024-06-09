@@ -52,7 +52,7 @@ bool BoundingBox::intersects(const Triangle& triangle) const {
         Real triangleMin, triangleMax;
         project(triangle.vertices, boxNormals[i], triangleMin, triangleMax);
         if (triangleMax < min[i] || triangleMin > max[i]) {
-            std::cout << "falseee" << std::endl;
+            //std::cout << "falseee" << std::endl;
             return false; // No intersection possible
         }
     }
@@ -63,7 +63,7 @@ bool BoundingBox::intersects(const Triangle& triangle) const {
     Real boxMin, boxMax;
     project(boxVertices, triangleNorm, boxMin, boxMax);
     if (boxMax < triangleOffset || boxMin > triangleOffset) {
-        std::cout << "falseee" << std::endl;
+        //std::cout << "falseee" << std::endl;
         return false; // No intersection possible
     }
 
@@ -80,12 +80,12 @@ bool BoundingBox::intersects(const Triangle& triangle) const {
             Real triangleMin, triangleMax;
             project(triangle.vertices, axis, triangleMin, triangleMax);
             if (boxMax < triangleMin || boxMin > triangleMax) {
-                std::cout << "falseee" << std::endl;
+                //std::cout << "falseee" << std::endl;
                 return false; // No intersection possible
             }
         }
     }
-    std::cout << "trueee" << std::endl;
+    //std::cout << "trueee" << std::endl;
     // No separating axis found, therefore there is an intersection
     return true;
 }

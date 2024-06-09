@@ -16,6 +16,7 @@ struct OctreeNode {
     std::vector<size_t> triangleIndices;
     std::unique_ptr<OctreeNode> children[8];
     NodeColor color;
+    int depth;
 
     OctreeNode(const BoundingBox& b, NodeColor col)
         : bounds(b), color(col) {}

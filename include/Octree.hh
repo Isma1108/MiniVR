@@ -10,6 +10,12 @@ public:
 
     void build(const std::vector<Triangle>& triangles);
 
+    OctreeNode* getRoot() const {
+        return root.get();
+    }
+
+    std::vector<OctreeNode*> collectGreyLeafNodes() const;
+
 private:
     std::unique_ptr<OctreeNode> root;
     int maxDepth;
@@ -18,6 +24,8 @@ private:
     void buildRecursive(OctreeNode* node, int depth);
     void subdivide(OctreeNode* node);
     bool isInsideModel(const BoundingBox& box) const;
+
+    void collectGreyLeafNodesRecursive(OctreeNode* node, std::vector<OctreeNode*>& greyNodes) const;
 };
 
 #endif // OCTREE_HH
