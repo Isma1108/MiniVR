@@ -10,7 +10,6 @@ typedef glm::tvec3<Real, glm::highp> Vector3D;  //3D floating point vector/point
 struct Triangle {
     std::array<Vector3D, 3> vertices;
     Vector3D normal;
-    std::array<Vector3D,13> projections;
 };
 
 #endif //TYPES_HH

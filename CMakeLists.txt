@@ -10,3 +10,9 @@ include_directories(include)
 
 add_executable(MiniVR ${SOURCES})
 
+find_package(OpenMP REQUIRED)
+
+if(OpenMP_CXX_FOUND)
+    target_link_libraries(MiniVR PUBLIC OpenMP::OpenMP_CXX)
+endif()
+
