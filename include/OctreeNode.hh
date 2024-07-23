@@ -13,10 +13,11 @@ enum class NodeColor { WHITE, BLACK, GREY };
 
 struct OctreeNode {
     BoundingBox bounds;
-    std::vector<size_t> triangleIndices;
+    std::vector<int> triangleIndices;
     std::unique_ptr<OctreeNode> children[8];
     NodeColor color;
     int depth;
+    bool* results_dev; // Declaración del puntero para resultados en GPU
 
     OctreeNode(const BoundingBox& b, NodeColor col)
         : bounds(b), color(col) {}

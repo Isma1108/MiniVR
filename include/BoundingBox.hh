@@ -16,4 +16,3 @@ struct BoundingBox {
 BoundingBox calculateGlobalBoundingBox(const std::vector<std::array<double, 3>>& vertexPositions);
 
 #endif // BOUNDING_BOX_HH
-

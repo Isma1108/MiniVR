@@ -5,7 +5,7 @@
 #include <array>
 
 typedef double Real;
-typedef glm::tvec3<Real, glm::highp> Vector3D;  //3D floating point vector/point, (x,y,z).
+typedef glm::tvec3<Real, glm::highp> Vector3D;
 
 struct Triangle {
     std::array<Vector3D, 3> vertices;
