@@ -23,8 +23,6 @@ Follow these steps to build and run the project:
 
 2. **Create a build directory**:
 
-    It's a good practice to create a separate build directory to keep the source directory clean.
-
     ```bash
     mkdir build
     cd build
